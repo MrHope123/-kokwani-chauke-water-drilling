@@ -74,7 +74,7 @@ window.addEventListener('scroll', () => {
 
 // ===== SCROLL REVEAL ANIMATION =====
 const revealElements = document.querySelectorAll(
-  '.service-card, .contact-card, .why-item, .gallery-item, .pricing-row, .about-highlights, .about-img-main'
+  '.service-card, .contact-card, .why-item, .carousel-slide, .pricing-row, .about-highlights, .about-img-main'
 );
 
 revealElements.forEach(el => el.classList.add('reveal'));
@@ -157,45 +157,135 @@ const heroObserver = new IntersectionObserver((entries) => {
 const heroStats = document.querySelector('.hero-stats');
 if (heroStats) heroObserver.observe(heroStats);
 
-// ===== GALLERY LIGHTBOX (simple) =====
-const galleryItems = document.querySelectorAll('.gallery-item');
-galleryItems.forEach(item => {
-  item.addEventListener('click', () => {
-    const img = item.querySelector('img');
-    const src = img.src;
-    const alt = img.alt;
+// ===== GALLERY CAROUSEL (focused-center style) =====
+(function () {
+  const track    = document.getElementById('carouselTrack');
+  const dotsWrap = document.getElementById('carouselDots');
+  if (!track) return;
 
-    const overlay = document.createElement('div');
-    overlay.style.cssText = `
-      position:fixed;inset:0;background:rgba(0,0,0,0.9);
-      display:flex;align-items:center;justify-content:center;
-      z-index:9999;cursor:pointer;padding:1rem;
-    `;
-    const image = document.createElement('img');
-    image.src = src;
-    image.alt = alt;
-    image.style.cssText = `max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain;`;
+  const slides    = Array.from(track.querySelectorAll('.carousel-slide'));
+  const total     = slides.length;
+  let   current   = 0;
+  let   autoTimer = null;
+  let   touchStartX = 0;
 
-    const close = document.createElement('button');
-    close.innerHTML = '&times;';
-    close.style.cssText = `
-      position:fixed;top:1.5rem;right:1.5rem;background:none;border:none;
-      color:white;font-size:2.5rem;cursor:pointer;line-height:1;opacity:0.8;
-    `;
-
-    overlay.appendChild(image);
-    overlay.appendChild(close);
-    document.body.appendChild(overlay);
-    document.body.style.overflow = 'hidden';
-
-    const closeIt = () => {
-      document.body.removeChild(overlay);
-      document.body.style.overflow = '';
-    };
-    overlay.addEventListener('click', closeIt);
-    close.addEventListener('click', closeIt);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeIt(); }, { once: true });
+  // ── Build dot indicators ─────────────────────────────────���────────
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+    dot.addEventListener('click', () => { goTo(i); resetAuto(); });
+    dotsWrap.appendChild(dot);
   });
-});
+
+  // ── Position the track so the active card is centred ─────────────
+  function positionTrack() {
+    const wrapper   = track.parentElement;          // .carousel-wrapper
+    const wrapW     = wrapper.offsetWidth;
+    const slide     = slides[current];
+    const slideW    = slide.offsetWidth;
+    const gap       = 24;                           // matches CSS gap: 1.5rem
+
+    // Distance from track left-edge to the left-edge of the active card
+    let offsetToCard = 0;
+    for (let i = 0; i < current; i++) {
+      offsetToCard += slides[i].offsetWidth + gap;
+    }
+
+    // Shift so the active card sits in the centre of the wrapper
+    const shift = offsetToCard - (wrapW / 2 - slideW / 2);
+    track.style.transform = `translateX(${-shift}px)`;
+  }
+
+  // ── Mark active slide and update dots ────────────────────────────
+  function updateActive() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    dotsWrap.querySelectorAll('.carousel-dot')
+      .forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function goTo(index) {
+    current = (index + total) % total;
+    updateActive();
+    positionTrack();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  // Initialise
+  updateActive();
+  // Wait one frame so slide widths are painted
+  requestAnimationFrame(() => positionTrack());
+  window.addEventListener('resize', positionTrack);
+
+  // ── Arrow buttons ─────────────────────────────────────────────────
+  document.querySelector('.carousel-prev').addEventListener('click', () => { prev(); resetAuto(); });
+  document.querySelector('.carousel-next').addEventListener('click', () => { next(); resetAuto(); });
+
+  // ── Auto-play ─────────────────────────────────────────────────────
+  function startAuto() { autoTimer = setInterval(next, 4000); }
+  function resetAuto()  { clearInterval(autoTimer); startAuto(); }
+  startAuto();
+
+  const wrapper = track.closest('.carousel-wrapper');
+  wrapper.addEventListener('mouseenter', () => clearInterval(autoTimer));
+  wrapper.addEventListener('mouseleave', startAuto);
+
+  // ── Touch / swipe ─────────────────────────────────────────────────
+  track.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  track.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) { diff > 0 ? next() : prev(); resetAuto(); }
+  });
+
+  // ── Keyboard navigation ───────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    const section = document.getElementById('gallery');
+    if (!section) return;
+    const rect = section.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      if (e.key === 'ArrowRight') { next(); resetAuto(); }
+      if (e.key === 'ArrowLeft')  { prev(); resetAuto(); }
+    }
+  });
+
+  // ── Clicking a side card jumps to it ─────────────────────────────
+  slides.forEach((slide, i) => {
+    slide.addEventListener('click', () => {
+      if (i !== current) { goTo(i); resetAuto(); return; }
+
+      // Lightbox for the active card
+      const img = slide.querySelector('img');
+      const overlay = document.createElement('div');
+      overlay.style.cssText = `
+        position:fixed;inset:0;background:rgba(0,0,0,0.92);
+        display:flex;align-items:center;justify-content:center;
+        z-index:9999;cursor:pointer;padding:1rem;
+      `;
+      const image = document.createElement('img');
+      image.src = img.src;
+      image.alt = img.alt;
+      image.style.cssText = `max-width:90vw;max-height:90vh;border-radius:12px;object-fit:contain;`;
+      const close = document.createElement('button');
+      close.innerHTML = '&times;';
+      close.style.cssText = `
+        position:fixed;top:1.5rem;right:1.5rem;background:none;border:none;
+        color:white;font-size:2.5rem;cursor:pointer;line-height:1;opacity:0.8;
+      `;
+      overlay.appendChild(image);
+      overlay.appendChild(close);
+      document.body.appendChild(overlay);
+      document.body.style.overflow = 'hidden';
+      const closeIt = () => { document.body.removeChild(overlay); document.body.style.overflow = ''; };
+      overlay.addEventListener('click', closeIt);
+      close.addEventListener('click', e => { e.stopPropagation(); closeIt(); });
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeIt(); }, { once: true });
+    });
+  });
+})();
 
 console.log('Kokwani Chauke Water Drilling website loaded ✓');

@@ -61,17 +61,25 @@
         <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">Always Open</span></div>
       </div>
     </div>
-    <div class="hero-scroll"><i class="fas fa-chevron-down"></i></div>
+
   </section>
 
   <!-- ===== TRUST BAR ===== -->
   <section class="trust-bar">
-    <div class="trust-container">
-      <div class="trust-item"><i class="fas fa-check-circle"></i> PVC & Pump Installation</div>
-      <div class="trust-item"><i class="fas fa-check-circle"></i> Control Box Included</div>
-      <div class="trust-item"><i class="fas fa-check-circle"></i> Steel Casing Available</div>
-      <div class="trust-item"><i class="fas fa-check-circle"></i> Quality Service Guaranteed</div>
-      <div class="trust-item"><i class="fas fa-check-circle"></i> Always Open</div>
+    <div class="trust-marquee">
+      <div class="trust-track">
+        <div class="trust-item"><i class="fas fa-wrench"></i> PVC &amp; Pump Installation</div>
+        <div class="trust-item"><i class="fas fa-bolt"></i> Control Box Included</div>
+        <div class="trust-item"><i class="fas fa-layer-group"></i> Steel Casing Available</div>
+        <div class="trust-item"><i class="fas fa-medal"></i> Quality Service Guaranteed</div>
+        <div class="trust-item"><i class="fas fa-clock"></i> Always Open</div>
+        <!-- Duplicate set for seamless loop -->
+        <div class="trust-item"><i class="fas fa-wrench"></i> PVC &amp; Pump Installation</div>
+        <div class="trust-item"><i class="fas fa-bolt"></i> Control Box Included</div>
+        <div class="trust-item"><i class="fas fa-layer-group"></i> Steel Casing Available</div>
+        <div class="trust-item"><i class="fas fa-medal"></i> Quality Service Guaranteed</div>
+        <div class="trust-item"><i class="fas fa-clock"></i> Always Open</div>
+      </div>
     </div>
   </section>
 
@@ -93,17 +101,6 @@
           <h2 class="section-title">Limpopo's Premier Water Drilling Company</h2>
           <p>Kokwani Chauke Water Drilling has built a strong reputation across Giyani and Limpopo province for delivering reliable, professional borehole drilling services. With a 363K-strong community of satisfied clients and followers, we are the go-to name when water access matters most.</p>
           <p>Based at Baloyi Complex, Office No. 26, R81 Main Road, Giyani — right next to Top Tiles and Nando's — we serve residential, agricultural, and commercial clients with the same commitment to quality every single time.</p>
-          <div class="about-highlights">
-            <div class="highlight"><i class="fas fa-map-marker-alt"></i>
-              <div><strong>Location</strong><br/>226 Xikukwani Village Eco-Park, Giyane</div>
-            </div>
-            <div class="highlight"><i class="fas fa-clock"></i>
-              <div><strong>Hours</strong><br/>Always Open – 24/7</div>
-            </div>
-            <div class="highlight"><i class="fas fa-phone-alt"></i>
-              <div><strong>Contact</strong><br/>083 747 7953 / 071 809 6980</div>
-            </div>
-          </div>
           <a href="#contact" class="btn btn-primary">Get a Quote</a>
         </div>
       </div>
@@ -234,31 +231,46 @@
         <h2 class="section-title">Drilling in Action</h2>
         <p class="section-desc">A look at our professional equipment and completed borehole projects across Limpopo.</p>
       </div>
-      <div class="gallery-grid">
-        <div class="gallery-item large">
-          <img src="assets/images/914281943_122285056184114014_8744476020719491057_n.jpg" alt="Drilling rig operating at full power" />
-          <div class="gallery-overlay"><span>Drilling Rig In Action</span></div>
-        </div>
-        <div class="gallery-item">
-          <img src="assets/images/833914048_1392860393061095_6406877835367378736_n.jpeg" alt="Team handling drill pipes on site" />
-          <div class="gallery-overlay"><span>Handling Drill Pipes</span></div>
-        </div>
-        <div class="gallery-item">
-          <img src="assets/images/916555112_122285187254114014_6062607967592554953_n.jpg" alt="Drilling truck arriving on site" />
-          <div class="gallery-overlay"><span>Rig Arriving On Site</span></div>
-        </div>
-        <div class="gallery-item">
-          <img src="assets/images/914248971_122285159342114014_8511889371824710085_n.jpg" alt="Site survey marking the drill point" />
-          <div class="gallery-overlay"><span>Site Survey & Planning</span></div>
-        </div>
-        <div class="gallery-item">
-          <img src="assets/images/916667136_122285186768114014_957397516845346002_n.jpg" alt="Community watching drilling operations" />
-          <div class="gallery-overlay"><span>Community Projects</span></div>
-        </div>
-        <div class="gallery-item">
-          <img src="assets/images/916418289_122285187158114014_1452799562295505361_n.jpg" alt="Full drilling rig against blue sky" />
-          <div class="gallery-overlay"><span>Professional Equipment</span></div>
-        </div>
+
+      <div class="carousel-wrapper">
+        <!-- Prev / Next buttons -->
+        <button class="carousel-btn carousel-prev" aria-label="Previous slide">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="carousel-btn carousel-next" aria-label="Next slide">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <!-- Track -->
+          <div class="carousel-track" id="carouselTrack">
+            <div class="carousel-slide">
+              <img src="assets/images/914281943_122285056184114014_8744476020719491057_n.jpg" alt="Drilling rig operating at full power" />
+              <div class="carousel-caption"><span>Drilling Rig In Action</span></div>
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/images/833914048_1392860393061095_6406877835367378736_n.jpeg" alt="Team handling drill pipes on site" />
+              <div class="carousel-caption"><span>Handling Drill Pipes</span></div>
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/images/916555112_122285187254114014_6062607967592554953_n.jpg" alt="Drilling truck arriving on site" />
+              <div class="carousel-caption"><span>Rig Arriving On Site</span></div>
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/images/914248971_122285159342114014_8511889371824710085_n.jpg" alt="Site survey marking the drill point" />
+              <div class="carousel-caption"><span>Site Survey & Planning</span></div>
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/images/916667136_122285186768114014_957397516845346002_n.jpg" alt="Community watching drilling operations" />
+              <div class="carousel-caption"><span>Community Projects</span></div>
+            </div>
+            <div class="carousel-slide">
+              <img src="assets/images/916418289_122285187158114014_1452799562295505361_n.jpg" alt="Full drilling rig against blue sky" />
+              <div class="carousel-caption"><span>Professional Equipment</span></div>
+            </div>
+          </div>
+
+        <!-- Dot indicators -->
+        <div class="carousel-dots" id="carouselDots"></div>
       </div>
     </div>
   </section>
@@ -403,13 +415,7 @@
     </div>
   </section>
 
-  <!-- ===== MAP ===== -->
-  <div class="map-section">
-    <iframe
-      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d57789.60!2d30.7!3d-23.3!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1ec5d0!2sGiyani%2C+Limpopo!5e0!3m2!1sen!2sza!4v1"
-      width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy">
-    </iframe>
-  </div>
+
 
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
